@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id ("kotlin-kapt") // or 'kotlin-kapt' if using Kapt
+    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -41,14 +43,17 @@ android {
 
 dependencies {
 
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
 
-    implementation("io.coil-kt:coil-compose:2.3.0")
+    implementation(libs.coil.compose)
+    implementation (libs.hilt.android)
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    kapt (libs.hilt.compiler) // or 'kapt' if using Kapt
 
-    implementation ("com.google.code.gson:gson:2.11.0" ) // Gson kutubxonasi
+    implementation (libs.gson ) // Gson kutubxonasi
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

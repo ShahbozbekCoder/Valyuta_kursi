@@ -1,4 +1,4 @@
-package com.shahbozbek.valyutakursi.ui.theme
+package com.shahbozbek.valyutakursi.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

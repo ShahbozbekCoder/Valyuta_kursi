@@ -1,6 +1,6 @@
-package com.shahbozbek.valyutakursi
+package com.shahbozbek.valyutakursi.data.model
 
-data class ConverterDataItem(
+data class CurrencyDto(
     val Ccy: String,
     val CcyNm_EN: String,
     val CcyNm_RU: String,

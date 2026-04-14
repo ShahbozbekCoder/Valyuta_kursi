@@ -1,6 +1,5 @@
-package com.shahbozbek.valyutakursi.ui.theme
+package com.shahbozbek.valyutakursi.presentation.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

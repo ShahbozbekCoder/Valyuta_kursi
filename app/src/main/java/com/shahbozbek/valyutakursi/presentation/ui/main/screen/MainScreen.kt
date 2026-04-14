@@ -1,4 +1,4 @@
-package com.shahbozbek.valyutakursi
+package com.shahbozbek.valyutakursi.presentation.ui.main.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,19 +25,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.shahbozbek.valyutakursi.presentation.ui.components.CurrencyItem
+import com.shahbozbek.valyutakursi.presentation.ui.main.vm.CurrencyViewModel
 
 @Composable
-fun MainScreen(navController: NavController, viewModel: MyViewModel = viewModel()) {
-    val currencyList by viewModel.currencyData.observeAsState(emptyList())
-    val isLoading by viewModel.isLoading.observeAsState(false)
-    val error by viewModel.error.observeAsState(null)
+fun MainScreen(navController: NavController, viewModel: CurrencyViewModel = hiltViewModel()) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchData()
-    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -57,9 +55,10 @@ fun MainScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF161513)
             )
-            if (currencyList.isNotEmpty()) {
+            val data = state.currencies
+            if (data.isNotEmpty()) {
                 Text(
-                    text = currencyList[0].Date,
+                    text = data[0].Date,
                     fontSize = 18.sp,
                     color = Color(0xFF333333),
                     fontWeight = FontWeight.Bold
@@ -73,7 +72,7 @@ fun MainScreen(navController: NavController, viewModel: MyViewModel = viewModel(
         }
         Spacer(modifier = Modifier.height(8.dp))
         when {
-            isLoading -> {
+            state.isLoading -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -83,19 +82,19 @@ fun MainScreen(navController: NavController, viewModel: MyViewModel = viewModel(
                 }
             }
 
-            error != null -> {
+            state.error != null -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .wrapContentSize(Alignment.Center)
                 ) {
-                    Text(text = error ?: "Unknown error", color = Color.Red)
+                    Text(text = state.error ?: "Unknown error", color = Color.Red)
                 }
             }
 
             else -> {
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(currencyList) { rates ->// Replace 10 with your dynamic data count
+                    items(state.currencies) { rates ->// Replace 10 with your dynamic data count
                         CurrencyItem(
                             navController = navController,
                             rate = rates

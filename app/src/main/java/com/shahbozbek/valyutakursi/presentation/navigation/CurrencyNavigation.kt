@@ -1,12 +1,14 @@
-package com.shahbozbek.valyutakursi
+package com.shahbozbek.valyutakursi.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.shahbozbek.valyutakursi.presentation.ui.components.ConversionScreen
+import com.shahbozbek.valyutakursi.presentation.ui.main.screen.MainScreen
 
 @Composable
-fun MyNavigation() {
+fun CurrencyNavigation() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = "mainScreen") {
         composable("mainScreen") { MainScreen(navController) }

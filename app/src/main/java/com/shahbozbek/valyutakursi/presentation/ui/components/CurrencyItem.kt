@@ -1,6 +1,5 @@
-package com.shahbozbek.valyutakursi
+package com.shahbozbek.valyutakursi.presentation.ui.components
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,20 +21,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.gson.Gson
-
+import com.shahbozbek.valyutakursi.R
+import com.shahbozbek.valyutakursi.core.Constants.PERCENTAGE
+import com.shahbozbek.valyutakursi.domain.model.Currency
+import com.shahbozbek.valyutakursi.presentation.ui.main.screen.painter
 
 @Composable
 fun CurrencyItem(
     navController: NavController,
-    rate: ConverterDataItem
+    rate: Currency
 ) {
     Column(
         modifier = Modifier.clickable {
@@ -49,7 +49,7 @@ fun CurrencyItem(
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val countryCode = rate.Ccy.substring(0, 2).lowercase()
+            val countryCode = rate.Ccy.take(2).lowercase()
             Image(
                 painter = painter(countryCode), // Replace with actual flag resource
                 contentDescription = null,
@@ -75,7 +75,7 @@ fun CurrencyItem(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = rate.Diff + "%",
+                        text = rate.Diff + PERCENTAGE,
                         fontSize = 16.sp,
                         color = Color(0xFF808080)
                     )

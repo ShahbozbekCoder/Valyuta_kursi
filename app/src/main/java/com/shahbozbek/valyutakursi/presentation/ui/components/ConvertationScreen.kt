@@ -1,4 +1,4 @@
-package com.shahbozbek.valyutakursi
+package com.shahbozbek.valyutakursi.presentation.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,16 +43,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.gson.Gson
+import com.shahbozbek.valyutakursi.R
+import com.shahbozbek.valyutakursi.core.Constants.CHAR_DOT
+import com.shahbozbek.valyutakursi.core.Constants.COUNTRY_CODE_UZ
+import com.shahbozbek.valyutakursi.core.Constants.EMPTY_TEXT
+import com.shahbozbek.valyutakursi.core.Constants.UZS
+import com.shahbozbek.valyutakursi.domain.model.Currency
+import com.shahbozbek.valyutakursi.presentation.ui.main.screen.painter
 
 @Composable
 fun ConversionScreen(
     navController: NavController,
-    rateJson: String? = "",
+    rateJson: String?,
 ) {
-    val myValue = remember { mutableStateOf("") }
-    val rate = rateJson?.let {
-        Gson().fromJson(it, ConverterDataItem::class.java)
-    }
+    val myValue = remember { mutableStateOf(EMPTY_TEXT) }
+    val rate = Gson().fromJson(rateJson, Currency::class.java)
+
     val isChanged = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -75,7 +81,7 @@ fun ConversionScreen(
                     .size(30.dp),
             ) {
                 Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack, // Replace with back icon resource
+                    Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
                     modifier = Modifier.size(30.dp)
                 )
@@ -84,7 +90,7 @@ fun ConversionScreen(
             Text(
                 text = "Konvertatsiya",
                 fontSize = 26.sp,
-                fontWeight = FontWeight.Bold, // Row ichida vertikal markazda
+                fontWeight = FontWeight.Bold,
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -109,9 +115,9 @@ fun ConversionScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    val countryCode = rate?.Ccy?.substring(0, 2)?.lowercase() ?: ""
+                    val countryCode = rate?.Ccy?.substring(0, 2)?.lowercase() ?: EMPTY_TEXT
                     Image(
-                        painter = painter(countryCode = if (isChanged.value) countryCode else "uz"), // Replace with USD flag resource
+                        painter = painter(countryCode = if (isChanged.value) countryCode else COUNTRY_CODE_UZ),
                         contentDescription = null,
                         modifier = Modifier
                             .size(50.dp)
@@ -120,7 +126,7 @@ fun ConversionScreen(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = if (isChanged.value) rate?.Ccy ?: "" else "UZS",
+                        text = if (isChanged.value) rate?.Ccy ?: EMPTY_TEXT else UZS,
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF26278D)
@@ -129,8 +135,8 @@ fun ConversionScreen(
                     OutlinedTextField(
                         value = myValue.value,
                         onValueChange = { newText ->
-                            if (newText.all { it.isDigit() || it == '.' } &&
-                                newText.count { it == '.' } <= 1) { // Faqat bir marta nuqta kirishiga ruxsat beriladi
+                            if (newText.all { it.isDigit() || it == CHAR_DOT } &&
+                                newText.count { it == CHAR_DOT } <= 1) {
                                 myValue.value = newText
                             }
                         },
@@ -178,7 +184,7 @@ fun ConversionScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.swap_vert), // Replace with swap icon resource
+                                painter = painterResource(id = R.drawable.swap_vert),
                                 contentDescription = "Swap",
                                 tint = Color.White,
                                 modifier = Modifier.size(28.dp)
@@ -204,9 +210,9 @@ fun ConversionScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    val countryCode = rate?.Ccy?.substring(0, 2)?.lowercase() ?: ""
+                    val countryCode = rate?.Ccy?.substring(0, 2)?.lowercase() ?: EMPTY_TEXT
                     Image(
-                        painter = painter(countryCode = if (isChanged.value) "uz" else countryCode), // Replace with USD flag resource
+                        painter = painter(countryCode = if (isChanged.value) COUNTRY_CODE_UZ else countryCode),
                         contentDescription = null,
                         modifier = Modifier
                             .size(50.dp)
@@ -215,24 +221,22 @@ fun ConversionScreen(
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = if (isChanged.value) "UZS" else rate?.Ccy ?: "",
+                        text = if (isChanged.value) UZS else rate?.Ccy ?: EMPTY_TEXT,
                         fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF26278D)
                     )
                     val result = if (isChanged.value) {
                         if (myValue.value.isNotEmpty() && rate != null) {
-                            // Formatlangan natija (masalan, 2 o'nlik raqam bilan)
                             "%.4f".format(myValue.value.toDouble() * rate.Rate.toDouble())
                         } else {
-                            ""
+                            EMPTY_TEXT
                         }
                     } else {
                         if (myValue.value.isNotEmpty() && rate != null) {
-                            // Formatlangan natija (masalan, 2 o'nlik raqam bilan)
                             "%.4f".format(myValue.value.toDouble() / rate.Rate.toDouble())
                         } else {
-                            "" // Agar malumotlar mavjud bo'lmasa
+                            EMPTY_TEXT
                         }
                     }
                     Spacer(modifier = Modifier.width(16.dp))
@@ -270,7 +274,7 @@ fun ConversionScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "1 ${rate?.Ccy} = ${rate?.Rate} UZS",
+            text = "1 ${rate?.Ccy} = ${rate?.Rate} $UZS",
             fontSize = 18.sp,
             color = Color(0xFF333333),
             modifier = Modifier.fillMaxWidth(),
